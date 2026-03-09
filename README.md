@@ -1,136 +1,94 @@
-# Leave Management App (Vue + Node + MongoDB)
+Leave Management App
 
-Basic web app where:
-- **Employees** can register/login, apply for leave, and track status (**PENDING / APPROVED / REJECTED**).
-- **Employers** can register/login, view all employee leave requests, and approve/reject.
+This is a simple leave management web app.
 
-## Tech stack
-- **Frontend**: Vue 3 (Vite) + Tailwind CSS
-- **Backend**: Node.js + Express
-- **DB**: MongoDB Atlas (Mongoose)
-- **Auth**: JWT (role-based access: `EMPLOYEE`, `EMPLOYER`)
+Employees can register/login, apply for leave, and check the status of their requests (PENDING / APPROVED / REJECTED).
 
----
+Employers can login, view all leave requests, and approve or reject them.
 
-## Repo structure
-- `backend/`: Express REST API
-- `frontend/`: Vue app
+Tech used:
+- Vue 3 + Vite + Tailwind (frontend)
+- Node.js + Express (backend)
+- MongoDB Atlas (Mongoose)
+- JWT authentication with roles (EMPLOYEE, EMPLOYER)
 
----
+Project folders:
 
-## Local setup
+backend/   -> Express API  
+frontend/  -> Vue application  
 
-### 1) MongoDB Atlas
-Create a MongoDB Atlas cluster and get the connection string.
+Running locally
 
-### 2) Backend
+1. MongoDB
 
-From `backend/`:
+Create a MongoDB Atlas cluster and copy the connection string.
 
-1. Create `.env` from `.env.example`:
+2. Backend
 
-```bash
-cp .env.example .env
-```
+Go to backend folder
 
-2. Set:
-- `MONGODB_URI`: your Atlas connection string
-- `JWT_SECRET`: long random string
-- `CLIENT_URL`: frontend URL (e.g. `http://localhost:5173`)
+cd backend
 
-3. Install & run:
+Create a `.env` file and add:
 
-```bash
+MONGODB_URI=your_mongodb_connection_string  
+JWT_SECRET=your_secret_key  
+CLIENT_URL=http://localhost:5173  
+
+Install dependencies
+
 npm install
+
+Run the server
+
 npm run dev
-```
 
-Backend runs on `http://localhost:5000`.
+Backend will start on:
 
-### 3) Frontend
+http://localhost:5000
 
-From `frontend/`:
 
-1. Create `.env` from `.env.example`:
+3. Frontend
 
-```bash
-cp .env.example .env
-```
+Go to frontend folder
 
-2. Set:
-- `VITE_API_URL=http://localhost:5000`
+cd frontend
 
-3. Install & run:
+Create `.env` file
 
-```bash
+VITE_API_URL=http://localhost:5000
+
+Install dependencies
+
 npm install
+
+Start the app
+
 npm run dev
-```
 
-Frontend runs on `http://localhost:5173`.
+Frontend will run on:
 
----
+http://localhost:5173
 
-## API endpoints
 
-### Auth
-- `POST /api/auth/register`
-  - body: `{ name, email, password, role }`
-  - role: `EMPLOYEE` or `EMPLOYER`
-  - returns: `{ token, user }`
+API routes
 
-- `POST /api/auth/login`
-  - body: `{ email, password }`
-  - returns: `{ token, user }`
+Auth
 
-### Leaves (Employee)
-- `POST /api/leaves` (JWT required; role `EMPLOYEE`)
-  - body: `{ leaveType, startDate, endDate, reason }`
-- `GET /api/leaves/my` (JWT required; role `EMPLOYEE`)
+POST /api/auth/register  
+POST /api/auth/login  
 
-### Leaves (Employer)
-- `GET /api/leaves` (JWT required; role `EMPLOYER`)
-- `PATCH /api/leaves/:id/approve` (JWT required; role `EMPLOYER`)
-- `PATCH /api/leaves/:id/reject` (JWT required; role `EMPLOYER`)
 
----
+Employee
 
-## Deployment (free platforms)
+POST /api/leaves       -> create leave request  
+GET /api/leaves/my     -> get own leave requests  
 
-You can deploy **backend** and **frontend** separately.
 
-### Option A (recommended): Render (backend) + Netlify (frontend)
+Employer
 
-#### Backend on Render
-- Create a new **Web Service**
-- Root directory: `backend`
-- Build command: `npm install`
-- Start command: `npm start`
-- Env vars:
-  - `MONGODB_URI`
-  - `JWT_SECRET`
-  - `JWT_EXPIRES_IN` (optional, default `7d`)
-  - `CLIENT_URL` = your Netlify app URL
+GET /api/leaves  
+PATCH /api/leaves/:id/approve  
+PATCH /api/leaves/:id/reject  
 
-#### Frontend on Netlify
-- New site from Git
-- Base directory: `frontend`
-- Build command: `npm run build`
-- Publish directory: `dist`
-- Env vars:
-  - `VITE_API_URL` = your Render backend base URL (example: `https://your-backend.onrender.com`)
-
-### Option B: Render for both
-- Backend: same as above
-- Frontend: deploy as a **Static Site**
-  - Base directory: `frontend`
-  - Build: `npm run build`
-  - Publish: `dist`
-  - Env: `VITE_API_URL`
-
----
-
-## Notes
-- Keep secrets out of git (don’t commit `.env`).
-- Create one **Employer** user to approve/reject, and one **Employee** user to request leave.
 
