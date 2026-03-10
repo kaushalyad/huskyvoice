@@ -110,6 +110,7 @@ router.get(
 );
 
 // Employer: view all leave requests
+
 router.get(
   "/",
   requireAuth,
